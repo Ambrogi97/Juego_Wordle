@@ -1,0 +1,71 @@
+:root {
+    --gris-oscuro: #2d2d2d;
+    --claro: #eff0fa;
+    --lavender-blue: #bbbdf6;
+    --blue-bell: #9893da;
+    --rhithm: #797a9e;
+    --sonic-silver: #72727e;
+    --granite-gray: #625f63;
+    --verde-acierto: #538d4e;
+    --amarillo-casi: #b59f3a;
+  }
+  
+  * {
+    color: #625f63;
+    font-family: "Open Sans", sans-serif;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background-color: var(--lavender-blue);
+  }
+  
+  h1,
+  h2,
+  h3 {
+    font-family: "Lora", serif;
+  }
+  
+  .juego-container {
+    height: 98vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .titulo-container {
+    text-align: center;
+    width: 100%;
+    max-width: 510px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--rhithm);
+  }
+  .titulo-container h1 {
+    margin: 10px;
+  }
+  
+  .titulo-container nav ul {
+    display: flex;
+    justify-content: space-between;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .titulo-container nav ul li {
+    padding: 5px 10px;
+    cursor: pointer;
+    list-style: none;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+  }
+  
+  nav ul li:hover {
+    background-color: var(--claro);
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  
+  
