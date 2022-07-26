@@ -1,33 +1,16 @@
 const displayMensaje = document.querySelector(".mensaje-container");
 const displayCajas = document.querySelector(".caja-container");
 const teclado = document.querySelector(".teclado-container");
-const listaPalabras = [];
+let listaPalabras = [];
 let wordle = "";
+let filaActual = 0;
+let cajaActual = 0;
+let juegoTerminado = false;
 
-fetch("../data/5.json")
-  .then((response) => response.json())
-  .then((palabras) => {
-    const sinAcentos = palabras.filter((palabra) => {
-      const acentos = ["á", "é", "í", "ó", "ú"];
-
-      for (const letra of palabra.split("")) {
-        for (const vocal of acentos) {
-          if (letra === vocal) return false;
-        }
-      }
-      return true;
-    });
-    listaPalabras = sinAcentos;
-    wordle = palabraAleatoria(listaPalabras).toUpperCase();
-    console.log(wordle);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-
-function palabraAleatoria(arr) {
-  return arr[Math.floor(arr.length * Math.random())];
-}
+let contadorCall;
+let horas = `00`;
+let minutos = `00`;
+let segundos = `00`;
 
 const teclas = [
   "Q",
@@ -61,6 +44,49 @@ const teclas = [
   "←",
 ];
 
+teclas.forEach((tecla) => {
+  const botonTecla = document.createElement("button");
+  botonTecla.textContent = tecla;
+  botonTecla.setAttribute("id", tecla);
+  botonTecla.addEventListener("click", () => {
+    if (tecla === "←") {
+      quitarLetra();
+      return;
+    }
+    if (tecla === "ENTER") {
+      verificarFila();
+      return;
+    }
+    ponerLetra(tecla);
+  });
+  teclado.append(botonTecla);
+});
+
+fetch("../data/5.json")
+  .then((response) => response.json())
+  .then((palabras) => {
+    listaPalabras = palabras.filter((palabra) => {
+      const acentos = ["á", "é", "í", "ó", "ú"];
+
+      for (const letra of palabra.split("")) {
+        for (const vocal of acentos) {
+          if (letra === vocal) return false;
+        }
+      }
+      return true;
+    });
+
+    wordle = palabraAleatoria(listaPalabras).toUpperCase();
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
+function palabraAleatoria(arr) {
+  return arr[Math.floor(arr.length * Math.random())];
+}
+
+
 const intentosFilas = [
   ["", "", "", "", ""],
   ["", "", "", "", ""],
@@ -69,10 +95,6 @@ const intentosFilas = [
   ["", "", "", "", ""],
   ["", "", "", "", ""],
 ];
-
-let filaActual = 0;
-let cajaActual = 0;
-let juegoTerminado = false;
 
 intentosFilas.forEach((intentoFila, indexFila) => {
   const elementoFila = document.createElement("div");
@@ -87,25 +109,6 @@ intentosFilas.forEach((intentoFila, indexFila) => {
     elementoCaja.classList.add("caja");
     elementoFila.appendChild(elementoCaja);
   });
-});
-
-teclas.forEach((tecla) => {
-  const botonTecla = document.createElement("button");
-  botonTecla.textContent = tecla;
-  botonTecla.setAttribute("id", tecla);
-  botonTecla.addEventListener("click", () => {
-    console.log("Clickie", tecla);
-    if (tecla === "←") {
-      quitarLetra();
-      return;
-    }
-    if (tecla === "ENTER") {
-      verificarFila();
-      return;
-    }
-    ponerLetra(tecla);
-  });
-  teclado.append(botonTecla);
 });
 
 const ponerLetra = (letra) => {
@@ -137,12 +140,18 @@ const verificarFila = () => {
     const adivinaUsuario = intentosFilas[filaActual].join("");
     resaltarCajas();
     if (adivinaUsuario === wordle) {
-      mostrarMensaje("Excelente, has ganado!");
+      mostrarMensaje("Excelente, has ganado! 🎉");
+      clearInterval(contadorCall);
       juegoTerminado = true;
       return;
     } else {
       if (filaActual >= 5) {
-        juegoTerminado = false;
+        let contadorDisplay = document.getElementById("contador");
+        mostrarMensaje("Que pena, perdiste! ☹");
+        clearInterval(contadorCall);
+        juegoTerminado = true;
+        let respuesta = `<p>El wordle era ${wordle}</p>`;
+        contadorDisplay.insertAdjacentHTML("beforeend", respuesta);
         return;
       }
       if (filaActual < 5) {
@@ -159,7 +168,7 @@ const mostrarMensaje = (mensaje) => {
   displayMensaje.append(elementoMensaje);
   setTimeout(() => {
     displayMensaje.removeChild(elementoMensaje);
-  }, 2000);
+  }, 2500);
 };
 
 const resaltarCajas = () => {
@@ -168,23 +177,75 @@ const resaltarCajas = () => {
   ).childNodes;
 
   let verificarWordle = wordle;
-  const intentos = [];
+  const intentoAdivinar = [];
+
+  cajasDeFila.forEach((caja) => {
+    intentoAdivinar.push({
+      letra: caja.getAttribute("data"),
+      color: "resaltado-gris",
+    });
+  });
+
+  intentoAdivinar.forEach((intento) => {
+    if (verificarWordle.includes(intento.letra)) {
+      intento.color = "resaltado-amarillo";
+      verificarWordle = verificarWordle.replace(intento.letra, "");
+    }
+  });
+
+  intentoAdivinar.forEach((intento, index) => {
+    if (intento.letra === wordle[index]) {
+      intento.color = "resaltado-verde";
+      verificarWordle = verificarWordle.replace(intento.letra, "");
+    }
+  });
 
   cajasDeFila.forEach((caja, index) => {
     const dataLetra = caja.getAttribute("data");
-
     setTimeout(() => {
-      caja.classList.add("girar");
-      if (dataLetra == wordle[index]) {
-        caja.classList.add("resaltado-verde");
-        document.getElementById(dataLetra).classList.add("resaltado-verde");
-      } else if (wordle.split("").includes(dataLetra)) {
-        caja.classList.add("resaltado-amarillo");
-        document.getElementById(dataLetra).classList.add("resaltado-amarillo");
-      } else {
-        caja.classList.add("resaltado-gris");
-        document.getElementById(dataLetra).classList.add("resaltado-gris");
-      }
-    }, 500 * index);
+      caja.classList.add(intentoAdivinar[index].color);
+      document
+        .getElementById(dataLetra)
+        .classList.add(intentoAdivinar[index].color);
+    }, 250 * index);
   });
+};
+
+const botonInicio = document.querySelector(".titulo-container button");
+botonInicio.addEventListener("click", () => {
+  clearInterval(contadorCall);
+  horas = `00`;
+  minutos = `00`;
+  segundos = `00`;
+  let contadorDisplay = document.getElementById("contador");
+  if (!contadorDisplay) {
+    contadorDisplay = document.createElement("div");
+    contadorDisplay.setAttribute("id", "contador");
+  }
+  displayMensaje.insertAdjacentElement("beforebegin", contadorDisplay);
+
+  contadorCall = setInterval(contador, 1000);
+});
+
+const contador = () => {
+  let contadorDisplay = document.getElementById("contador");
+  segundos++;
+
+  if (segundos < 10) segundos = `0` + segundos;
+
+  if (segundos > 59) {
+    segundos = `00`;
+    minutos++;
+
+    if (minutos < 10) minutos = `0` + minutos;
+  }
+
+  if (minutos > 59) {
+    minutos = `00`;
+    horas++;
+
+    if (horas < 10) horas = `0` + horas;
+  }
+
+  contadorDisplay.innerHTML = `<p>${horas}:${minutos}:${segundos}</p>`;
 };
