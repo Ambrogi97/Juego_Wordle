@@ -1,14 +1,33 @@
+:root {
+  --gris-oscuro: #2d2d2d;
+  --claro: #eff0fa;
+  --lavender-blue: #bbbdf6;
+  --blue-bell: #9893da;
+  --rhithm: #797a9e;
+  --sonic-silver: #72727e;
+  --granite-gray: #625f63;
+  --verde-acierto: #538d4e;
+  --amarillo-casi: #b59f3a;
+}
+
 * {
   color: #625f63;
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-family: "Open Sans", sans-serif;
+  box-sizing: border-box;
 }
 
 body {
-  background-color: #bbbdf67e;
+  background-color: var(--lavender-blue);
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Lora", serif;
 }
 
 .juego-container {
-  height: 90vh;
+  height: 98vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -19,24 +38,38 @@ body {
   text-align: center;
   width: 100%;
   max-width: 510px;
-  border-bottom: 1px solid #797a9e;
+  border-bottom: 1px solid var(--rhithm);
 }
 .titulo-container h1 {
   margin-bottom: 10px;
 }
 
-.titulo-container button {
+.titulo-container button,
+.modal button {
   padding: 5px 10px;
   margin-bottom: 10px;
   cursor: pointer;
 }
 
+.jugador-container {
+  min-height: 145px;
+  text-align: center;
+}
+
+#contador {
+  font-family: "Digital", sans-serif;
+  font-size: 38px;
+  font-weight: 500;
+  margin: 5px;
+}
+
 .mensaje-container {
-  height: 30px;
+  height: 130px;
+  padding: 10px;
 }
 
 .mensaje-container p {
-  background-color: aliceblue;
+  background-color: var(--claro);
   border-radius: 10px;
   padding: 10px;
   margin: 0;
@@ -54,7 +87,7 @@ body {
 .caja-container .caja {
   width: 62px;
   height: 62px;
-  border: 2px solid #797a9e;
+  border: 2px solid var(--rhithm);
   border-radius: 3px;
   box-sizing: border-box;
   display: flex;
@@ -91,15 +124,19 @@ body {
   width: 8%;
   height: 48px;
   border-radius: 4px;
-  border: 1px solid;
+  border: 1px solid var(--rhithm);
   margin: 3px;
 }
 
-.teclado-container button:nth-child(21),
+.teclado-container button:nth-child(21) {
+  width: 15%;
+  max-width: 68px;
+  font-size: 0.7rem;
+}
+
 .teclado-container button:nth-child(29) {
   width: 12%;
   max-width: 68px;
-  font-size: 0.7rem;
 }
 
 .caja.girar {
@@ -108,28 +145,94 @@ body {
 
 @keyframes giro {
   0% {
-    transform: rotateY(0deg);
+    transform: rotateX(0deg);
   }
   50% {
-    transform: rotateY(90deg);
+    transform: rotateX(90deg);
   }
   100% {
-    transform: rotateY(0deg);
+    transform: rotateX(0deg);
   }
 }
 
 .resaltado-gris {
-  background-color: #3a3a3a !important;
-  color: #edf2f4 !important;
+  background-color: var(--sonic-silver) !important;
+  color: var(--claro) !important;
   border: none !important;
 }
 .resaltado-amarillo {
-  background-color: #b59f3a !important;
-  color: #edf2f4 !important;
+  background-color: var(--amarillo-casi) !important;
+  color: var(--claro) !important;
   border: none !important;
 }
 .resaltado-verde {
-  background-color: #538d4e !important;
-  color: #edf2f4 !important;
+  background-color: var(--verde-acierto) !important;
+  color: var(--claro) !important;
   border: none !important;
+}
+
+.modal-container {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.modal-container .modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  max-width: 360px;
+  min-height: 400px;
+  background-color: var(--granite-gray);
+  padding: 20px 10px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px var(--gris-oscuro);
+}
+
+.bienvenida,
+.registro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.bienvenida h2 {
+  color: var(--claro);
+}
+
+.bienvenida p {
+  padding: 20px;
+  width: 80%;
+  margin: 0 auto;
+  color: var(--lavender-blue);
+  font-family: Lora;
+  text-align: justify;
+  align-self: flex-start;
+}
+
+.registro label,
+.registro button {
+  margin: 20px;
+}
+
+.registro label {
+  font-size: 1.2rem;
+  color: var(--claro);
+}
+
+.registro input {
+  padding: 10px;
+  text-align: center;
+  font-size: 1rem;
+  border-radius: 3px;
+  border: 3px solid var(--lavender-blue);
+  background-color: var(--claro);
 }
