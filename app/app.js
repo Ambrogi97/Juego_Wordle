@@ -4,8 +4,11 @@ const displayCajas = document.querySelector(".caja-container");
 const modal = document.querySelector(".modal-container");
 const teclado = document.querySelector(".teclado-container");
 let jugador = {
-  name: "",
+  nombre: "",
   tablero: [],
+  wordle: "",
+  fecha: new Date().getTime(),
+  tiempo: "",
 };
 let listaPalabras = [];
 let wordle = "";
@@ -65,7 +68,6 @@ function obtenerPalabra() {
 function palabraAleatoria(arr) {
   return arr[Math.floor(arr.length * Math.random())];
 }
-
 
 const intentosFilas = [
   ["", "", "", "", ""],
@@ -136,7 +138,6 @@ const ponerLetra = (letra) => {
   }
 };
 
-
 const quitarLetra = () => {
   if (cajaActual > 0) {
     cajaActual--;
@@ -153,8 +154,7 @@ const verificarFila = () => {
   if (cajaActual > 4) {
     const adivinaUsuario = intentosFilas[filaActual].join("");
     jugador.tablero.push(adivinaUsuario);
-    console.log(jugador.tablero);
-    resaltarCajas();
+    resaltarCajas(filaActual);
     if (adivinaUsuario === wordle) {
       mostrarMensaje("Excelente, has ganado! 🎉", true);
       clearInterval(contadorCall);
@@ -178,7 +178,6 @@ const verificarFila = () => {
   }
 };
 
-
 const mostrarMensaje = (mensaje, permanente = false) => {
   displayMensaje.innerHTML = "";
   const elementoMensaje = document.createElement("p");
@@ -192,8 +191,7 @@ const mostrarMensaje = (mensaje, permanente = false) => {
   }
 };
 
-
-const resaltarCajas = () => {
+const resaltarCajas = (filaActual) => {
   const cajasDeFila = document.getElementById(
     `intentoFila-${filaActual}`
   ).childNodes;
@@ -256,16 +254,29 @@ const contador = () => {
   contadorDisplay.innerHTML = `${horas}:${minutos}:${segundos}`;
 };
 
-const btnJugar = document.querySelector(".titulo-container button");
-btnJugar.addEventListener("click", () => {
-  if (jugador.name == "") {
+const iniciarContador = (h = `00`, m = `00`, s = `00`) => {
+  let contadorDisplay = document.getElementById("contador");
+  horas = h;
+  minutos = m;
+  segundos = s;
+  if (!contadorDisplay) {
+    contadorDisplay = document.createElement("p");
+    contadorDisplay.setAttribute("id", "contador");
+  }
+  displayJugador.insertAdjacentElement("beforeend", contadorDisplay);
+
+  contadorCall = setInterval(contador, 1000);
+};
+
+const btnJugar = document.querySelector("#jugar");
+btnJugar.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (!jugador.nombre) {
     modal.style.display = "flex";
   } else {
+    displayJugador.innerHTML = `<p>¡Mucha suerte, ${jugador.nombre}!</p>`;
     clearInterval(contadorCall);
-    horas = `00`;
-    minutos = `00`;
-    segundos = `00`;
-    contadorCall = setInterval(contador, 1000);
+    iniciarContador();
     displayMensaje.innerHTML = "";
     if (displayJugador.childNodes.length == 3) {
       displayJugador.removeChild(displayJugador.lastChild());
@@ -278,37 +289,78 @@ btnJugar.addEventListener("click", () => {
 const btnEmpezarJuego = document.getElementById("empezar");
 btnEmpezarJuego.addEventListener("click", () => {
   const nombre = document.querySelector(".registro input");
-  jugador.name = nombre.value;
+  jugador.nombre = nombre.value;
 
-  if (jugador.name != "") {
+  if (jugador.nombre) {
     displayJugador.innerHTML = "";
     let contadorDisplay = document.getElementById("contador");
     clearInterval(contadorCall);
 
-    horas = `00`;
-    minutos = `00`;
-    segundos = `00`;
-    if (!contadorDisplay) {
-      contadorDisplay = document.createElement("p");
-      contadorDisplay.setAttribute("id", "contador");
-    }
-    displayJugador.insertAdjacentElement("afterbegin", contadorDisplay);
-
-    contadorCall = setInterval(contador, 1000);
+    iniciarContador();
 
     displayJugador.insertAdjacentHTML(
       "afterbegin",
-      `<p>¡Mucha suerte, ${jugador.name}!</p>`
+      `<p>¡Mucha suerte, ${jugador.nombre}!</p>`
     );
 
+    iniciarWordle();
     generarTeclado(true);
     modal.style.display = "none";
     nombre.value = "";
   }
 });
 
-window.addEventListener("DOMContentLoaded",() => {
+window.addEventListener("DOMContentLoaded", () => {
   wordle = obtenerPalabra();
   iniciarWordle();
   generarTeclado();
+});
+
+const guardarJuego = (jugador) => {
+  jugador.wordle = wordle;
+  clearInterval(contadorCall);
+  jugador.tiempo = `${horas}:${minutos}:${segundos}`;
+  localStorage.setItem("jugador", JSON.stringify(jugador));
+  iniciarWordle();
+  generarTeclado();
+  mostrarMensaje("Juego guardado correctamente.");
+};
+
+const cargarJuego = () => {
+  jugador = JSON.parse(localStorage.getItem("jugador"));
+  generarTeclado(true);
+  wordle = jugador.wordle;
+  horas = jugador.tiempo.split(":")[0];
+  minutos = jugador.tiempo.split(":")[1];
+  segundos = jugador.tiempo.split(":")[2];
+  for (let i = 0; i < jugador.tablero.length; i++) {
+    filaActual = i;
+    const palabra = jugador.tablero[i];
+    const letras = palabra.split("");
+    for (let j = 0; j < letras.length; j++) {
+      cajaActual = j;
+      ponerLetra(letras[j]);
+    }
+    resaltarCajas(filaActual);
+  }
+  verificarFila();
+  displayJugador.innerHTML = "";
+  displayJugador.innerHTML = `<p>¡Mucha suerte, ${jugador.nombre}!</p>`;
+  iniciarContador(horas, minutos, segundos);
+};
+
+const guardar = document.getElementById("guardar");
+guardar.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (!jugador.nombre) {
+    mostrarMensaje("No hay ningún jugador");
+  } else {
+    guardarJuego(jugador);
+  }
+});
+
+const cargar = document.getElementById("cargar");
+cargar.addEventListener("click", (e) => {
+  e.preventDefault();
+  cargarJuego();
 });
