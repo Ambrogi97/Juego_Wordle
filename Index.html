@@ -6,13 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="style/style.css" />
-    <title>Wordle App</title>
+    <title>Wordle</title>
   </head>
   <body>
     <div class="juego-container">
       <div class="titulo-container">
         <h1>Wordle Game</h1>
-        <button>Jugar</button>
+        <nav>
+          <ul>
+            <li><a href="" id="jugar">Jugar</a></li>
+            <li><a href="" id="cargar">Cargar Juego</a></li>
+            <li><a href="" id="guardar">Guardar Juego</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+          </ul>
+        </nav>
       </div>
       <div class="jugador-container"></div>
 
@@ -22,7 +29,6 @@
 
       <div class="teclado-container"></div>
     </div>
-
     <div class="modal-container">
       <div class="modal">
         <div class="bienvenida">
@@ -40,6 +46,6 @@
       </div>
     </div>
 
-    <script type="module" src="app/app.js"></script>
+    <script type="module" src="js/main.js"></script>
   </body>
 </html>
