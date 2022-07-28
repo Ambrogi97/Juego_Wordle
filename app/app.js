@@ -1,3 +1,4 @@
+//#region variables
 const displayJugador = document.querySelector(".jugador-container");
 const displayMensaje = document.querySelector(".mensaje-container");
 const displayCajas = document.querySelector(".caja-container");
@@ -52,7 +53,8 @@ const teclas = [
   "M",
   "←",
 ];
-
+//#endregion
+//#region funcion obtener palabra
 function obtenerPalabra() {
   fetch("../data/20.json")
     .then((response) => response.json())
@@ -69,6 +71,8 @@ function palabraAleatoria(arr) {
   return arr[Math.floor(arr.length * Math.random())];
 }
 
+//#endregion
+//#region tablero
 const intentosFilas = [
   ["", "", "", "", ""],
   ["", "", "", "", ""],
@@ -77,7 +81,8 @@ const intentosFilas = [
   ["", "", "", "", ""],
   ["", "", "", "", ""],
 ];
-
+//#endregion
+//#region iniciador de wordle
 const iniciarWordle = () => {
   displayCajas.innerHTML = "";
 
@@ -96,7 +101,8 @@ const iniciarWordle = () => {
     });
   });
 };
-
+//#endregion
+//#region funciones del teclado
 const generarTeclado = (habilitado = false) => {
   teclado.innerHTML = "";
 
@@ -149,7 +155,8 @@ const quitarLetra = () => {
     intentosFilas[filaActual][cajaActual] = "";
   }
 };
-
+//#endregion
+//#region verificacion de la palabra guardada
 const verificarFila = () => {
   if (cajaActual > 4) {
     const adivinaUsuario = intentosFilas[filaActual].join("");
@@ -178,7 +185,8 @@ const verificarFila = () => {
     }
   }
 };
-
+//#endregion
+//#region mensajes
 const mostrarMensaje = (mensaje, permanente = false) => {
   displayMensaje.innerHTML = "";
   const elementoMensaje = document.createElement("p");
@@ -192,6 +200,8 @@ const mostrarMensaje = (mensaje, permanente = false) => {
   }
 };
 
+//#endregion
+//#region colores segun el nivel de acierto
 const resaltarCajas = (filaActual) => {
   const cajasDeFila = document.getElementById(
     `intentoFila-${filaActual}`
@@ -231,7 +241,8 @@ const resaltarCajas = (filaActual) => {
     }, 250 * index);
   });
 };
-
+//#endregion
+//#region contador
 const contador = () => {
   const contadorDisplay = document.getElementById("contador");
   segundos++;
@@ -268,7 +279,8 @@ const iniciarContador = (h = `00`, m = `00`, s = `00`) => {
 
   contadorCall = setInterval(contador, 1000);
 };
-
+//#endregion
+//#region boton jugar
 const btnJugar = document.querySelector("#jugar");
 btnJugar.addEventListener("click", (e) => {
   e.preventDefault();
@@ -292,7 +304,8 @@ btnJugar.addEventListener("click", (e) => {
     }
   }
 });
-
+//#endregion
+//#region empieza el juego
 const btnEmpezarJuego = document.getElementById("empezar");
 btnEmpezarJuego.addEventListener("click", () => {
   const nombre = document.querySelector(".registro input");
@@ -317,16 +330,20 @@ btnEmpezarJuego.addEventListener("click", () => {
   }
 });
 
-window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("DOMContentLoaded",() => {
   wordle = obtenerPalabra();
   iniciarWordle();
   generarTeclado();
 });
-
+//#endregion
+//#region boton guardar 
 const guardarJuego = (jugador) => {
-  let juegosGuardados = localStorage.getItem("juegosGuardados")
-    ? JSON.parse(localStorage.getItem("juegosGuardados"))
-    : [];
+  let juegosGuardados
+  if (localStorage.getItem("juegosGuardados")) {
+    juegosGuardados = JSON.parse(localStorage.getItem("juegosGuardados"))
+  } else{
+    juegosGuardados = []
+  }
   console.log(juegosGuardados);
   if (juegoTerminado) {
     mostrarMensaje("Este juego no se puede guardar porque ya ha terminado.");
@@ -341,7 +358,8 @@ const guardarJuego = (jugador) => {
     mostrarMensaje("Juego guardado correctamente.");
   }
 };
-
+//#endregion
+//#region cargar
 const cargarJuego = () => {
   const juegosGuardados = JSON.parse(localStorage.getItem("juegosGuardados"));
   if (!juegosGuardados || juegosGuardados.length == 0) {
@@ -354,7 +372,8 @@ const cargarJuego = () => {
     renderJuegosGuardados(juegosGuardados);
   }
 };
-
+//#endregion
+//#region validaciones
 const guardar = document.getElementById("guardar");
 guardar.addEventListener("click", (e) => {
   e.preventDefault();
@@ -371,6 +390,8 @@ cargar.addEventListener("click", (e) => {
   cargarJuego();
 });
 
+//#endregion
+//#region lista de juegos guardados
 function renderJuegosGuardados(juegosGuardados) {
   const listaContainer = document.querySelector(".lista-container");
   if (listaContainer) listaContainer.remove();
@@ -424,7 +445,8 @@ function renderJuegosGuardados(juegosGuardados) {
   guardadosContainer.insertAdjacentElement("beforeend", listaGuardados);
   guardadosContainer.style.display = "flex";
 }
-
+//#endregion
+//#region elimina la lista de los juegos guardados
 function eliminarJuegoGuardado(fecha) {
   let juegosGuardados = JSON.parse(localStorage.getItem("juegosGuardados"));
   if (juegosGuardados) {
@@ -432,3 +454,4 @@ function eliminarJuegoGuardado(fecha) {
     localStorage.setItem("juegosGuardados", JSON.stringify(juegos));
   }
 }
+//#endregion
