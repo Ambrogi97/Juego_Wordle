@@ -157,6 +157,7 @@ const verificarFila = () => {
     resaltarCajas(filaActual);
     if (adivinaUsuario === wordle) {
       mostrarMensaje("Excelente, has ganado! 🎉", true);
+      eliminarJuegoGuardado(jugador.fecha);
       clearInterval(contadorCall);
       juegoTerminado = true;
       return;
@@ -165,9 +166,9 @@ const verificarFila = () => {
         let contadorDisplay = document.getElementById("contador");
         mostrarMensaje("Que pena, perdiste! 😞", true);
         clearInterval(contadorCall);
-        juegoTerminado = true;
         let respuesta = `<p>El wordle era ${wordle}</p>`;
         displayJugador.insertAdjacentHTML("beforeend", respuesta);
+        juegoTerminado = true;
         return;
       }
       if (filaActual < 5) {
@@ -274,15 +275,21 @@ btnJugar.addEventListener("click", (e) => {
   if (!jugador.nombre) {
     modal.style.display = "flex";
   } else {
-    displayJugador.innerHTML = `<p>¡Mucha suerte, ${jugador.nombre}!</p>`;
-    clearInterval(contadorCall);
-    iniciarContador();
-    displayMensaje.innerHTML = "";
-    if (displayJugador.childNodes.length == 3) {
-      displayJugador.removeChild(displayJugador.lastChild());
-    }
+    filaActual = 0;
+    cajaActual = 0;
+    jugador.tablero = [];
+    wordle = obtenerPalabra();
     iniciarWordle();
     generarTeclado(true);
+    displayJugador.innerHTML = `<p>¡Mucha suerte, ${jugador.nombre}!</p>`;
+    clearInterval(contadorCall);
+    juegoTerminado = false;
+    iniciarContador();
+    displayMensaje.innerHTML = "";
+    console.log(displayJugador.childNodes.length);
+    if (displayJugador.childNodes.length > 2) {
+      displayJugador.removeChild(displayJugador.lastChild());
+    }
   }
 });
 
@@ -310,43 +317,42 @@ btnEmpezarJuego.addEventListener("click", () => {
   }
 });
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
   wordle = obtenerPalabra();
   iniciarWordle();
   generarTeclado();
 });
 
 const guardarJuego = (jugador) => {
-  jugador.wordle = wordle;
-  clearInterval(contadorCall);
-  jugador.tiempo = `${horas}:${minutos}:${segundos}`;
-  localStorage.setItem("jugador", JSON.stringify(jugador));
-  iniciarWordle();
-  generarTeclado();
-  mostrarMensaje("Juego guardado correctamente.");
+  let juegosGuardados = localStorage.getItem("juegosGuardados")
+    ? JSON.parse(localStorage.getItem("juegosGuardados"))
+    : [];
+  console.log(juegosGuardados);
+  if (juegoTerminado) {
+    mostrarMensaje("Este juego no se puede guardar porque ya ha terminado.");
+  } else {
+    jugador.wordle = btoa(wordle);
+    clearInterval(contadorCall);
+    jugador.tiempo = `${horas}:${minutos}:${segundos}`;
+    juegosGuardados.push(jugador);
+    localStorage.setItem("juegosGuardados", JSON.stringify(juegosGuardados));
+    iniciarWordle();
+    generarTeclado();
+    mostrarMensaje("Juego guardado correctamente.");
+  }
 };
 
 const cargarJuego = () => {
-  jugador = JSON.parse(localStorage.getItem("jugador"));
-  generarTeclado(true);
-  wordle = jugador.wordle;
-  horas = jugador.tiempo.split(":")[0];
-  minutos = jugador.tiempo.split(":")[1];
-  segundos = jugador.tiempo.split(":")[2];
-  for (let i = 0; i < jugador.tablero.length; i++) {
-    filaActual = i;
-    const palabra = jugador.tablero[i];
-    const letras = palabra.split("");
-    for (let j = 0; j < letras.length; j++) {
-      cajaActual = j;
-      ponerLetra(letras[j]);
-    }
-    resaltarCajas(filaActual);
+  const juegosGuardados = JSON.parse(localStorage.getItem("juegosGuardados"));
+  if (!juegosGuardados || juegosGuardados.length == 0) {
+    mostrarMensaje("No hay ningún juego guardado");
+  } else {
+    console.log(juegosGuardados);
+    clearInterval(contadorCall);
+    generarTeclado(true);
+
+    renderJuegosGuardados(juegosGuardados);
   }
-  verificarFila();
-  displayJugador.innerHTML = "";
-  displayJugador.innerHTML = `<p>¡Mucha suerte, ${jugador.nombre}!</p>`;
-  iniciarContador(horas, minutos, segundos);
 };
 
 const guardar = document.getElementById("guardar");
@@ -364,3 +370,65 @@ cargar.addEventListener("click", (e) => {
   e.preventDefault();
   cargarJuego();
 });
+
+function renderJuegosGuardados(juegosGuardados) {
+  const listaContainer = document.querySelector(".lista-container");
+  if (listaContainer) listaContainer.remove();
+  const guardadosContainer = document.createElement("div");
+  guardadosContainer.classList.add("lista-container");
+
+  const listaGuardados = document.createElement("div");
+  listaGuardados.classList.add("lista-juegos");
+
+  const h2 = `<h2>Juegos guardados</h2>`;
+  guardadosContainer.insertAdjacentHTML("afterbegin", h2);
+
+  juegosGuardados.forEach((juego) => {
+    const p = document.createElement("p");
+    p.classList.add("juego-guardado");
+    p.innerHTML = `${juego.nombre} - ${new Date(juego.fecha).toLocaleDateString(
+      "es",
+      { year: "numeric", month: "short", day: "numeric" }
+    )}<br /><span>${juego.tablero}</span>`;
+
+    p.addEventListener("click", () => {
+      jugador = juego;
+      clearInterval(contadorCall);
+      iniciarWordle();
+      wordle = atob(juego.wordle);
+      horas = juego.tiempo.split(":")[0];
+      minutos = juego.tiempo.split(":")[1];
+      segundos = juego.tiempo.split(":")[2];
+      for (let i = 0; i < juego.tablero.length; i++) {
+        filaActual = i;
+        const palabra = juego.tablero[i];
+        const letras = palabra.split("");
+        for (let j = 0; j < letras.length; j++) {
+          cajaActual = j;
+          ponerLetra(letras[j]);
+        }
+        resaltarCajas(filaActual);
+      }
+      jugador.tablero = [];
+      verificarFila();
+
+      guardadosContainer.style.display = "none";
+      displayJugador.innerHTML = "";
+      displayJugador.innerHTML = `<p>¡Mucha suerte, ${juego.nombre}!</p>`;
+      iniciarContador(horas, minutos, segundos);
+    });
+
+    listaGuardados.insertAdjacentElement("beforeend", p);
+  });
+  modal.insertAdjacentElement("afterend", guardadosContainer);
+  guardadosContainer.insertAdjacentElement("beforeend", listaGuardados);
+  guardadosContainer.style.display = "flex";
+}
+
+function eliminarJuegoGuardado(fecha) {
+  let juegosGuardados = JSON.parse(localStorage.getItem("juegosGuardados"));
+  if (juegosGuardados) {
+    const juegos = juegosGuardados.filter((juego) => fecha !== juego.fecha);
+    localStorage.setItem("juegosGuardados", JSON.stringify(juegos));
+  }
+}
