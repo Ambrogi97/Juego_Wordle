@@ -272,13 +272,25 @@ form label {
 
 .registro input,
 form input,
-form textarea {
+form textarea,
+#volver {
   padding: 10px;
   text-align: center;
   font-size: 1rem;
   border-radius: 3px;
   border: 3px solid var(--lavender-blue);
   background-color: var(--claro);
+}
+
+#enviar{
+  color: #0e0d0d;
+  background-color: #538d4e;
+}
+
+#volver{
+  text-decoration:none;
+  color: #0e0d0d;
+  background-color: #c23f3f;
 }
 
 .formulario {

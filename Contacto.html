@@ -13,18 +13,18 @@
       <form action="mailto:yomismo@mail.com">
         <div class="form-block">
           <label for="nombre">Nombre: </label>
-          <input type="text" name="" id="nombre" required />
+          <input type="text" name="" id="nombre" autocomplete="off" required />
         </div>
         <div class="form-block">
           <label for="email">Correo: </label>
-          <input type="email" name="" id="email" required />
+          <input type="email" name="" id="email" autocomplete="off" required />
         </div>
         <div class="form-block">
           <label for="mensaje">Mensaje: </label>
-          <textarea name="" id="mensaje" cols="10" rows="10" required
+          <textarea name="" id="mensaje" cols="10" rows="10" autocomplete="off" required
           ></textarea>
         </div>
-        <input type="submit" value="Enviar" />
+        <input type="submit" value="Enviar" id="enviar"/> <br>
         <a href="Index.html" role="button" id="volver">Cacelar</a>
       </form>
     </div>
