@@ -14,6 +14,7 @@
   color: #625f63;
   font-family: "Open Sans", sans-serif;
   box-sizing: border-box;
+  margin: 0;
 }
 
 body {
@@ -336,4 +337,17 @@ form textarea {
 
 .form-block {
   padding: 10px;
+}
+
+footer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: var(--lavender-blue);
+  min-height: 70px;
+}
+
+footer p {
+  color: rgb(0, 0, 0);
 }
