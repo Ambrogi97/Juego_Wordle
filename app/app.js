@@ -170,7 +170,6 @@ const verificarFila = () => {
       return;
     } else {
       if (filaActual >= 5) {
-        let contadorDisplay = document.getElementById("contador");
         mostrarMensaje("Que pena, perdiste! 😞", true);
         clearInterval(contadorCall);
         let respuesta = `<p>El wordle era ${wordle}</p>`;
@@ -313,7 +312,6 @@ btnEmpezarJuego.addEventListener("click", () => {
 
   if (jugador.nombre) {
     displayJugador.innerHTML = "";
-    let contadorDisplay = document.getElementById("contador");
     clearInterval(contadorCall);
 
     iniciarContador();
@@ -447,6 +445,7 @@ function renderJuegosGuardados(juegosGuardados) {
 }
 //#endregion
 //#region elimina la lista de los juegos guardados
+
 function eliminarJuegoGuardado(fecha) {
   let juegosGuardados = JSON.parse(localStorage.getItem("juegosGuardados"));
   if (juegosGuardados) {
