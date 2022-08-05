@@ -319,7 +319,7 @@ form textarea,
   max-width: 400px;
   margin: 0 auto;
   background-color: var(--rhithm);
-  padding: 20px 10px;
+  padding: 20px 100px;
   border-radius: 5px;
   box-shadow: 0px 2px 5px var(--gris-oscuro);
 }
@@ -348,7 +348,7 @@ form textarea {
 }
 
 footer{
-  display: flex;
+  display: flex;  
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -357,5 +357,12 @@ footer{
 }
 
 footer p {
-  color: rgb(0, 0, 0);
+  color: #0e0d0d;
+}
+
+p{
+  color:#262424;
+  background-color: #d73939;
+  font-weight: 600;
+  font-family:Arial, Helvetica, sans-serif
 }
