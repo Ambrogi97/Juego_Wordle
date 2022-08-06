@@ -15,3 +15,5 @@ Cómo se juega a Wordle
 Es sencillo, tienes que escribir una palabra y ver las letras que has acertado, que tendrán diferente color dependiendo de si acertaste:
 
 Si la letra aparece en verde, es porque la has acertado y está en la palabra, y también está en la casilla correcta de la palabra. Si la letra aparece en amarillo, es porque está en la palabra, pero no está en la casilla correcta. Si la letra aparece en amarillo es porque no has acertado, y no está en la palabra que tienes que adivinar.
+
+link de github page: https://ambrogi97.github.io/Juego_Wordle/
