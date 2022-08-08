@@ -90,12 +90,10 @@ const iniciarWordle = () => {
     const elementoFila = document.createElement("div");
     elementoFila.setAttribute("id", `intentoFila-${indexFila}`);
     displayCajas.appendChild(elementoFila);
+
     intentoFila.forEach((cajaLetra, indexCaja) => {
       const elementoCaja = document.createElement("div");
-      elementoCaja.setAttribute(
-        "id",
-        `intentoFila-${indexFila}-posicion-${indexCaja}`
-      );
+      elementoCaja.setAttribute("id", `intentoFila-${indexFila}-posicion-${indexCaja}`);
       elementoCaja.classList.add("caja");
       elementoFila.appendChild(elementoCaja);
     });
@@ -134,8 +132,7 @@ const generarTeclado = (habilitado = false) => {
 
 const ponerLetra = (letra) => {
   if (filaActual < 6 && cajaActual < 5) {
-    const caja = document.getElementById(
-      `intentoFila-${filaActual}-posicion-${cajaActual}`
+    const caja = document.getElementById(`intentoFila-${filaActual}-posicion-${cajaActual}`
     );
     caja.innerText = letra;
     caja.setAttribute("data", letra);
@@ -147,9 +144,7 @@ const ponerLetra = (letra) => {
 const quitarLetra = () => {
   if (cajaActual > 0) {
     cajaActual--;
-    const caja = document.getElementById(
-      `intentoFila-${filaActual}-posicion-${cajaActual}`
-    );
+    const caja = document.getElementById(`intentoFila-${filaActual}-posicion-${cajaActual}`);
     caja.innerText = "";
     caja.setAttribute("data", "");
     intentosFilas[filaActual][cajaActual] = "";
@@ -202,9 +197,7 @@ const mostrarMensaje = (mensaje, permanente = false) => {
 //#endregion
 //#region colores segun el nivel de acierto
 const resaltarCajas = (filaActual) => {
-  const cajasDeFila = document.getElementById(
-    `intentoFila-${filaActual}`
-  ).childNodes;
+  const cajasDeFila = document.getElementById(`intentoFila-${filaActual}`).childNodes;
 
   let verificarWordle = wordle;
   const intentoAdivinar = [];
@@ -219,14 +212,14 @@ const resaltarCajas = (filaActual) => {
   intentoAdivinar.forEach((intento) => {
     if (verificarWordle.includes(intento.letra)) {
       intento.color = "resaltado-amarillo";
-      verificarWordle = verificarWordle.replace(intento.letra, "");
+      verificarWordle = verificarWordle.replace(intento.letra);
     }
   });
 
   intentoAdivinar.forEach((intento, index) => {
     if (intento.letra === wordle[index]) {
       intento.color = "resaltado-verde";
-      verificarWordle = verificarWordle.replace(intento.letra, "");
+      verificarWordle = verificarWordle.replace(intento.letra);
     }
   });
 
@@ -245,21 +238,27 @@ const resaltarCajas = (filaActual) => {
 const contador = () => {
   const contadorDisplay = document.getElementById("contador");
   segundos++;
-
-  if (segundos < 10) segundos = `0` + segundos;
-
+//segundos
+  if (segundos < 10) {
+    segundos = `0` + segundos;
+  }
+//minutos
   if (segundos > 59) {
     segundos = `00`;
     minutos++;
 
-    if (minutos < 10) minutos = `0` + minutos;
+    if (minutos < 10) {
+      minutos = `0` + minutos;
+    }
   }
-
+//horas
   if (minutos > 59) {
     minutos = `00`;
     horas++;
 
-    if (horas < 10) horas = `0` + horas;
+    if (horas < 10) {
+      horas = `0` + horas;
+    }
   }
 
   contadorDisplay.innerHTML = `${horas}:${minutos}:${segundos}`;
@@ -392,7 +391,9 @@ cargar.addEventListener("click", (e) => {
 //#region lista de juegos guardados
 function renderJuegosGuardados(juegosGuardados) {
   const listaContainer = document.querySelector(".lista-container");
-  if (listaContainer) listaContainer.remove();
+  if (listaContainer) {
+    listaContainer.remove();
+  }
   const guardadosContainer = document.createElement("div");
   guardadosContainer.classList.add("lista-container");
 

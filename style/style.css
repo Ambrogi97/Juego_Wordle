@@ -128,13 +128,6 @@ nav ul li:hover {
   }
 }
 
-@media (max-width: 700px){
-  footer{
-      flex-direction: column;
-  }
-}
-
-
 .teclado-container {
   width: 100%;
   max-width: 510px;
@@ -345,19 +338,6 @@ form textarea {
 
 .form-block {
   padding: 10px;
-}
-
-footer{
-  display: flex;  
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  background-color: var(--lavender-blue);
-  min-height: 70px;
-}
-
-footer p {
-  color: #0e0d0d;
 }
 
 .form-block p{

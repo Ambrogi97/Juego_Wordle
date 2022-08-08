@@ -9,46 +9,51 @@
     <title>Wordle App</title>
   </head>
   <body>
-    <div class="juego-container">
-      <div class="titulo-container">
-        <h1>Juego Wordle</h1>
-        <nav>
-          <ul>
-            <li><a href="" id="jugar">Jugar</a></li>
-            <li><a href="" id="cargar">Cargar Juego</a></li>
-            <li><a href="" id="guardar">Guardar Juego</a></li>
-            <li><a href="contacto.html">Contacto</a></li>
-          </ul>
-        </nav>
-      </div>
-      <div class="jugador-container"></div>
-
-      <div class="mensaje-container"></div>
-
-      <div class="caja-container"></div>
-
-      <div class="teclado-container"></div>
-    </div>
-    <div class="modal-container">
-      <div class="modal">
-        <div class="bienvenida">
-          <h2>Bienvenido a Wordle Game</h2>
-          <p>
-            Primero escribe tu nombre para guardar los cambios, al empezar el
-            juego se iniciará un contador que marcará el tiempo de juego.
-          </p>
+    <main>
+      <div class="juego-container">
+        <div class="titulo-container">
+          <h1>Juego Wordle</h1>
+          <nav>
+            <ul>
+              <li><a href="" id="jugar">Jugar</a></li>
+              <li><a href="" id="cargar">Cargar Juego</a></li>
+              <li><a href="" id="guardar">Guardar Juego</a></li>
+              <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+          </nav>
         </div>
-        <div class="registro">
-          <label for="jugador">Ingresa tu nombre:</label>
-          <input type="text" name="nombre" id="jugador" />
-          <button id="empezar">Aceptar</button>
+        <div class="jugador-container"></div>
+  
+        <div class="mensaje-container"></div>
+  
+        <div class="caja-container"></div>
+  
+        <div class="teclado-container"></div><br>
+  
+        <div>
+          <p>Si quieres visitar nuestro repositorio entra en el siguiente enlace : </p>
+          <a href="https://github.com/Ambrogi97/Juego_Wordle" target="_blank">https://github.com/Ambrogi97/Juego_Wordle</a>
         </div>
       </div>
-    </div>
-    <footer>
-      <p>Si quieres visitar nuestro repositorio entra en el siguiente enlace : </p>
-      <a href="https://github.com/Ambrogi97/Juego_Wordle" target="_blank">https://github.com/Ambrogi97/Juego_Wordle</a>
-    </footer>
+    </main>
+    <section>
+      <div class="modal-container">
+        <div class="modal">
+          <div class="bienvenida">
+            <h2>Bienvenido a Wordle Game</h2>
+            <p>
+              Primero escribe tu nombre para guardar los cambios, al empezar el
+              juego se iniciará un contador que marcará el tiempo de juego.
+            </p>
+          </div>
+          <div class="registro">
+            <label for="jugador">Ingresa tu nombre:</label>
+            <input type="text" name="nombre" id="jugador" />
+            <button id="empezar">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </section>
     <script src="app/app.js"></script>
   </body>
 </html>
